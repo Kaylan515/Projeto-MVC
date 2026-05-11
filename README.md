@@ -18,3 +18,8 @@ python -m alembic revision --autogenerate -m "Criar tabela usuarios"
 ```bash
 python -m alembic upgrade head
 ```
+
+# Como rodar o código:
+```bash
+python -m uvicorn app.main:app --reload
+```
