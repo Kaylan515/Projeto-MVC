@@ -10,15 +10,20 @@
 <body>
     <h1>Entrar no sistema</h1>
     <form action="/auth/login" method="post">
+        <!--Exibe confirmação de cadastro-->
+        {% if request.query_params.get("cadastro") == "ok" %}
+        <p style="color: green;">Cadastro realizado! Faça login</p>
+        {% endif %}
         E-mail: <input type="email" name="email" required>
         <br><br>
         Senha: <input type="password" name="senha">
         <br><br>
         {% if error %}
-            <p style="color: red;">{{ error }}</p>
+        <p style="color: red;">{{ error }}</p>
         {% endif %}
         <button type="submit">Entrar</button>
     </form>
     <p>Não tem conta? <a href="/auth/cadastro">Cadastre-se</a></p>
 </body>
+
 </html>
