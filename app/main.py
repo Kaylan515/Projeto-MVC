@@ -15,7 +15,6 @@ templates = Jinja2Templates(directory="app/templates")
 #Incluir os routers dos controles
 app.include_router(auth_controller.router)
 
-
 #Tela inicial
 @app.get("/")
 def home(
@@ -29,6 +28,7 @@ def home(
             "index.html",
             {"request": request}
         )
+    
     #Logado - exibir a tela principal com os dados do usuário
     return templates.TemplateResponse(
         request,

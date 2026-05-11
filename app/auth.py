@@ -32,7 +32,7 @@ def criar_token(data: dict):
     payload = data.copy()
 
     #Define quando o token expira
-    expira = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRACAO_MINUTOS)
+    expira = datetime.now(timezone.utc) + timedelta(minutes=int(ACCESS_TOKEN_EXPIRACAO_MINUTOS))
     payload.update( {"exp": expira} )
 
     #Criar o token
