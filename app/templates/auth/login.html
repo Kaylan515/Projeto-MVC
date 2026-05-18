@@ -1,29 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login</title>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        body {
+
+            background:
+                linear-gradient(135deg,
+                    #2ecc71,
+                    #27ae60);
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        .container {
+
+            background: white;
+
+            width: 420px;
+
+            padding: 40px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, .2);
+
+        }
+
+
+
+        .icone {
+
+            text-align: center;
+
+            font-size: 55px;
+
+            margin-bottom: 10px;
+        }
+
+
+
+        h1 {
+
+            text-align: center;
+
+            color: #2c3e50;
+
+            margin-bottom: 25px;
+        }
+
+
+
+        label {
+
+            display: block;
+
+            margin-top: 15px;
+
+            color: #555;
+
+            font-weight: bold;
+        }
+
+
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 8px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            transition: .3s;
+        }
+
+
+        input:focus {
+
+            border-color: #2ecc71;
+
+            box-shadow:
+                0 0 5px rgba(46, 204, 113, .4);
+
+        }
+
+
+
+        .botao {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            border: none;
+
+            padding: 14px;
+
+            border-radius: 8px;
+
+            background: #2ecc71;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+
+        .botao:hover {
+
+            background: #27ae60;
+        }
+
+
+
+        .sucesso {
+
+            background: #eafaf1;
+
+            color: green;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            margin-bottom: 15px;
+        }
+
+
+
+        .erro {
+
+            background: #fdecea;
+
+            color: red;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            margin-top: 15px;
+        }
+
+
+
+        .cadastro {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #555;
+        }
+
+
+        .cadastro a {
+
+            text-decoration: none;
+
+            color: #2ecc71;
+
+            font-weight: bold;
+        }
+
+
+        .cadastro a:hover {
+
+            color: #27ae60;
+        }
+    </style>
+
 </head>
 
+
+
 <body>
-    <h1>Entrar no sistema</h1>
-    <form action="/auth/login" method="post">
-        <!--Exibe confirmação de cadastro-->
-        {% if request.query_params.get("cadastro") == "ok" %}
-        <p style="color: green;">Cadastro realizado! Faça login</p>
-        {% endif %}
-        E-mail: <input type="email" name="email" required>
-        <br><br>
-        Senha: <input type="password" name="senha">
-        <br><br>
-        {% if erro %}
-        <p style="color: red;">{{ error }}</p>
-        {% endif %}
-        <button type="submit">Entrar</button>
-    </form>
-    <p>Não tem conta? <a href="/auth/cadastro">Cadastre-se</a></p>
+
+    <div class="container">
+
+        <div class="icone">
+
+            🔐
+
+        </div>
+
+
+        <h1>
+
+            Entrar no sistema
+
+        </h1>
+
+
+
+        <form action="/auth/login" method="post">
+
+
+
+            {% if request.query_params.get("cadastro") == "ok" %}
+
+            <div class="sucesso">
+
+                Cadastro realizado!
+                Faça login.
+
+            </div>
+
+            {% endif %}
+
+
+
+            <label>
+
+                E-mail
+
+                <input type="email" name="email" required>
+
+            </label>
+
+
+
+            <label>
+
+                Senha
+
+                <input type="password" name="senha" required>
+
+            </label>
+
+
+
+            {% if erro %}
+
+            <div class="erro">
+
+                {{ erro }}
+
+            </div>
+
+            {% endif %}
+
+
+
+            <button type="submit" class="botao">
+
+                Entrar
+
+            </button>
+
+
+        </form>
+
+
+
+        <p class="cadastro">
+
+            Não tem conta?
+
+            <a href="/auth/cadastro">
+
+                Cadastre-se
+
+            </a>
+
+        </p>
+
+
+
+    </div>
+
 </body>
 
 </html>

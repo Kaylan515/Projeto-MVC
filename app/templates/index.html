@@ -1,16 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo - AAPM</title>
-</head>
-<body>
-    <h1> Sistema de Estoque </h1>
-    <p>Faça login para acessar o sistema.</p>
-    <br>
 
-    <a href="/auth/login">Entrar</a>
-    <a href="/auth/cadastro">Criar conta</a>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bem-vindo - AAPM</title>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+
+            background:
+                linear-gradient(135deg,
+                    #2ecc71,
+                    #27ae60);
+
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .container {
+
+            background: white;
+
+            width: 420px;
+
+            padding: 45px;
+
+            text-align: center;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, .2);
+
+        }
+
+
+        h1 {
+
+            color: #2c3e50;
+
+            margin-bottom: 20px;
+        }
+
+
+        p {
+
+            color: #666;
+
+            margin-bottom: 35px;
+
+            font-size: 17px;
+        }
+
+
+        .botoes {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+
+        .botao {
+
+            text-decoration: none;
+
+            padding: 14px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            transition: .3s;
+
+            font-size: 16px;
+
+            font-weight: bold;
+        }
+
+
+        .login {
+
+            background: #2ecc71;
+        }
+
+        .login:hover {
+
+            background: #27ae60;
+        }
+
+
+
+        .cadastro {
+
+            background: #3498db;
+        }
+
+        .cadastro:hover {
+
+            background: #2980b9;
+        }
+
+
+        .logo {
+
+            font-size: 60px;
+
+            margin-bottom: 15px;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="container">
+
+        <div class="logo">
+
+            📦
+
+        </div>
+
+
+        <h1>
+
+            Sistema de Estoque
+
+        </h1>
+
+
+        <p>
+
+            Faça login para acessar o sistema
+
+        </p>
+
+
+
+        <div class="botoes">
+
+            <a href="/auth/login" class="botao login">
+
+                Entrar
+
+            </a>
+
+
+
+            <a href="/auth/cadastro" class="botao cadastro">
+
+                Criar conta
+
+            </a>
+
+        </div>
+
+
+    </div>
+
 </body>
+
 </html>
