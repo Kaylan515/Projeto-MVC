@@ -206,4 +206,4 @@ def toggle_ativo(
     categoria.ativo = not categoria.ativo
     db.commit()
 
-    return RedirectResponse(url="/categorias", status_code=302)
+    return RedirectResponse(url="/categorias?toggle=ok", status_code=302)

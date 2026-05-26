@@ -1,86 +1,59 @@
-<!-- produtos/form.html -->
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ "Editar" if editando else "Novo" }} Produto — AAPM SENAI</title>
-</head>
-<body>
-    <h1>{{ "Editar produto" if editando else "Novo produto" }}</h1>
+{% extends "base.html" %}
+
+{% block title %}{{ "Editar" if editando else "Novo" }} Produto — Estoque{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 class="page-title">{{ "Editar produto" if editando else "Novo produto" }}</h1>
 
     {% if erro %}
-        <p style="color:red">{{ erro }}</p>
+        <div class="alert error">{{ erro }}</div>
     {% endif %}
 
-    <!--
-        enctype="multipart/form-data" é obrigatório para envio de arquivos.
-        Sem ele o FastAPI não consegue ler o UploadFile.
-    -->
-    <form action="{{ '/produtos/' + editando.id|string + '/editar' if editando else '/produtos/novo' }}"
-          method="post"
-          enctype="multipart/form-data">
+    <form action="{{ '/produtos/' + editando.id|string + '/editar' if editando else '/produtos/novo' }}" method="post" enctype="multipart/form-data" class="form-grid">
+        <div>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" value="{{ editando.nome if editando else (valores.nome if valores else '') }}" required>
+        </div>
 
-        <label>Nome:
-            <input type="text"
-                   name="nome"
-                   value="{{ editando.nome if editando else (valores.nome if valores else '') }}"
-                   required>
-        </label>
-        <br>
+        <div>
+            <label for="preco">Preço (R$)</label>
+            <input type="number" id="preco" name="preco" step="0.01" min="0" value="{{ editando.preco if editando else (valores.preco if valores else '0.00') }}" required>
+        </div>
 
-        <label>Preço (R$):
-            <input type="number"
-                   name="preco"
-                   step="0.01"
-                   min="0"
-                   value="{{ editando.preco if editando else (valores.preco if valores else '0.00') }}"
-                   required>
-        </label>
-        <br>
+        <div>
+            <label for="estoque_atual">Estoque atual</label>
+            <input type="number" id="estoque_atual" name="estoque_atual" min="0" value="{{ editando.estoque_atual if editando else (valores.estoque_atual if valores else '0') }}" required>
+        </div>
 
-        <label>Estoque atual:
-            <input type="number"
-                   name="estoque_atual"
-                   min="0"
-                   value="{{ editando.estoque_atual if editando else (valores.estoque_atual if valores else '0') }}"
-                   required>
-        </label>
-        <br>
-
-        <label>Categoria:
-            <select name="categoria_id">
+        <div>
+            <label for="categoria_id">Categoria</label>
+            <select id="categoria_id" name="categoria_id">
                 <option value="0">Sem categoria</option>
                 {% for c in categorias %}
-                    <option value="{{ c.id }}"
-                        {{ 'selected' if (editando and editando.categoria_id == c.id) or (valores and valores.categoria_id == c.id) else '' }}>
+                    <option value="{{ c.id }}" {{ 'selected' if (editando and editando.categoria_id == c.id) or (valores and valores.categoria_id == c.id) else '' }}>
                         {{ c.nome }}
                     </option>
                 {% endfor %}
             </select>
-        </label>
-        <br>
+        </div>
 
-        <!-- Imagem atual na edição -->
         {% if editando and editando.imagem_path %}
-            <p>Imagem atual:</p>
-            <img src="{{ editando.imagem_url }}"
-                 alt="{{ editando.nome }}"
-                 width="100"
-                 style="object-fit:cover">
-            <br>
+            <div style="grid-column: 1 / -1;">
+                <label>Imagem atual</label>
+                <img src="{{ editando.imagem_url }}" alt="{{ editando.nome }}" style="width:100%; max-width:240px; border-radius:16px; object-fit:cover; display:block;">
+            </div>
         {% endif %}
 
-        <label>{{ "Nova imagem (deixe vazio para manter a atual):" if editando else "Imagem:" }}
-            <input type="file"
-                   name="imagem"
-                   accept=".jpg,.jpeg,.png,.webp">
-        </label>
-        <br>
+        <div style="grid-column: 1 / -1;">
+            <label for="imagem">{{ "Nova imagem (deixe vazio para manter a atual):" if editando else "Imagem" }}</label>
+            <input type="file" id="imagem" name="imagem" accept=".jpg,.jpeg,.png,.webp">
+        </div>
 
-        <button type="submit">
-            {{ "Salvar alterações" if editando else "Criar produto" }}
-        </button>
-        <a href="/produtos">Cancelar</a>
+        <div class="actions" style="grid-column: 1 / -1; justify-content:flex-start;">
+            <button type="submit">{{ "Salvar alterações" if editando else "Criar produto" }}</button>
+            <a class="button secondary" href="/produtos">Cancelar</a>
+        </div>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema{% endblock %}</title>
+    <link rel="icon" href="/static/favicon.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div>
+                <a class="brand" href="/">SEDUC Estoque</a>
+                <p class="subtitle">Painel de gestão de estoque, produtos e categorias</p>
+            </div>
+            <nav class="top-nav">
+                <a href="/">Início</a>
+                <a href="/produtos">Produtos</a>
+                <a href="/categorias">Categorias</a>
+                {% if usuario is defined and usuario.role == 'admin' %}
+                    <a href="/usuarios">Usuários</a>
+                {% endif %}
+                {% if usuario is defined %}
+                    <a href="/auth/logout">Sair</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="page-footer">
+        <p>Projeto MVC SEDUC · Interface moderna para estoque</p>
+    </footer>
+</body>
+</html>

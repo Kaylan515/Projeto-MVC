@@ -1,78 +1,42 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Categorias — AAPM SENAI</title>
-</head>
-<body>
-    <h1>Categorias</h1>
+{% extends "base.html" %}
 
-    {% if request.query_params.get('criado') == 'ok' %}
-        <p style="color:green">Categoria criada com sucesso!</p>
+{% block title %}{{ "Editar" if editando else "Nova" }} Categoria — Estoque{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 class="page-title">{{ "Editar categoria" if editando else "Nova categoria" }}</h1>
+
+    {% if erro %}
+        <div class="alert error">{{ erro }}</div>
     {% endif %}
 
-    {% if request.query_params.get('editado') == 'ok' %}
-        <p style="color:green">Categoria atualizada com sucesso!</p>
+    <form action="{{ '/categorias/' + editando.id|string + '/editar' if editando else '/categorias/nova' }}" method="post" class="form-grid">
+        <div>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" value="{{ editando.nome if editando else (valores.nome if valores else '') }}" required autofocus>
+        </div>
+
+        <div class="actions" style="justify-content:flex-start; gap:1rem; width:100%; margin-top: 0.5rem;">
+            <button type="submit">{{ "Salvar alterações" if editando else "Criar categoria" }}</button>
+            <a class="button secondary" href="/categorias">Cancelar</a>
+        </div>
+    </form>
+
+    {% if editando and editando.produtos %}
+        <div class="card" style="margin-top:2rem; padding:1.5rem; background:#f8fbff;">
+            <h2>Produtos ativos vinculados</h2>
+            <ul style="margin: 1rem 0 0; padding-left: 1.25rem; color: var(--text);">
+                {% for p in editando.produtos if p.ativo %}
+                    <li style="margin-bottom:0.55rem;">
+                        <a class="small-link" href="/produtos/{{ p.id }}">{{ p.nome }}</a> — R$ {{ "%.2f"|format(p.preco) }}
+                    </li>
+                {% else %}
+                    <li>Nenhum produto ativo vinculado.</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
-    {% if request.query_params.get('erro') == 'produtos_vinculados' %}
-        <p style="color:red">
-            Não é possível desativar "{{ request.query_params.get('categoria') }}"
-            pois ela possui produtos ativos vinculados.
-            Desative ou mova os produtos antes.
-        </p>
-    {% endif %}
-
-    <a href="/categorias/nova">+ Nova categoria</a>
-
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Produtos ativos</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in categorias %}
-            <tr>
-                <td>{{ c.nome }}</td>
-
-                <!--
-                    c.produtos vem do relationship definido no model.
-                    Filtramos em Python para contar apenas os ativos.
-                -->
-                <td>
-                    {{ c.produtos | selectattr('ativo') | list | length }}
-                </td>
-
-                <td>{{ "Ativa" if c.ativo else "Inativa" }}</td>
-
-                <td>
-                    <a href="/categorias/{{ c.id }}/editar">Editar</a>
-
-                    <form action="/categorias/{{ c.id }}/toggle-ativo"
-                          method="post"
-                          style="display:inline">
-                        <button type="submit">
-                            {{ "Desativar" if c.ativo else "Ativar" }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-
-            {% if not categorias %}
-            <tr>
-                <td colspan="4" style="text-align:center">
-                    Nenhuma categoria cadastrada.
-                </td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
-
-    <p><a href="/">← home</a></p>
-</body>
-</html>
+    <p class="footer-note"><a class="small-link" href="/categorias">← Voltar às categorias</a></p>
+</div>
+{% endblock %}

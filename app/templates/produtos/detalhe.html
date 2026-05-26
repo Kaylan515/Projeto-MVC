@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ produto.nome }} — Estoque{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="section-header">
+        <div>
+            <h1 class="page-title">{{ produto.nome }}</h1>
+            <p class="form-footnote">Categoria: <strong>{{ produto.categoria.nome if produto.categoria else "—" }}</strong></p>
+            {% if request.query_params.get('editado') == 'ok' %}
+                <div class="alert success">Produto atualizado com sucesso!</div>
+            {% endif %}
+        </div>
+        {% if usuario.role == 'admin' %}
+            <a class="button" href="/produtos/{{ produto.id }}/editar">Editar</a>
+        {% endif %}
+    </div>
+
+    <div class="form-grid" style="grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;">
+        <div>
+            <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" style="width:100%; border-radius: 20px; object-fit: cover; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);">
+        </div>
+        <div>
+            <div class="card" style="padding:1.5rem; border-radius:20px;">
+                <p><strong>Preço</strong></p>
+                <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
+                <hr>
+                <p><strong>Estoque atual</strong></p>
+                <p>{{ produto.estoque_atual }}</p>
+            </div>
+        </div>
+    </div>
+
+    <p class="footer-note"><a class="small-link" href="/produtos">← Voltar à lista de produtos</a></p>
+</div>
+{% endblock %}

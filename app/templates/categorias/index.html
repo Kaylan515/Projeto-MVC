@@ -1,51 +1,68 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ "Editar" if editando else "Nova" }} Categoria — AAPM SENAI</title>
-</head>
-<body>
-    <h1>{{ "Editar categoria" if editando else "Nova categoria" }}</h1>
+{% extends "base.html" %}
 
-    {% if erro %}
-        <p style="color:red">{{ erro }}</p>
-    {% endif %}
+{% block title %}Categorias — Estoque{% endblock %}
 
-    <form action="{{ '/categorias/' + editando.id|string + '/editar' if editando else '/categorias/nova' }}"
-          method="post">
+{% block content %}
+<div class="card">
+    <div class="section-header">
+        <div>
+            <h1 class="page-title">Categorias</h1>
+            {% if request.query_params.get('criado') == 'ok' %}
+                <div class="alert success">Categoria criada com sucesso!</div>
+            {% endif %}
+            {% if request.query_params.get('editado') == 'ok' %}
+                <div class="alert success">Categoria atualizada com sucesso!</div>
+            {% endif %}
+            {% if request.query_params.get('erro') == 'produtos_vinculados' %}
+                <div class="alert error">
+                    Não é possível desativar "{{ request.query_params.get('categoria') }}" porque ela possui produtos ativos.
+                </div>
+            {% endif %}
+        </div>
+        <a class="button" href="/categorias/nova">+ Nova categoria</a>
+    </div>
 
-        <label>Nome:
-            <input type="text"
-                   name="nome"
-                   value="{{ editando.nome if editando else (valores.nome if valores else '') }}"
-                   required
-                   autofocus>
-        </label>
-        <br>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Produtos ativos</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in categorias %}
+                <tr>
+                    <td>{{ c.nome }}</td>
+                    <td>{{ c.produtos | selectattr('ativo') | list | length }}</td>
+                    <td>
+                        <span class="status-badge {{ 'active' if c.ativo else 'inactive' }}">
+                            {{ "Ativa" if c.ativo else "Inativa" }}
+                        </span>
+                    </td>
+                    <td>
+                        <a class="button secondary" href="/categorias/{{ c.id }}/editar">Editar</a>
+                        <form action="/categorias/{{ c.id }}/toggle-ativo" method="post" style="display:inline;">
+                            <button class="button {{ 'danger' if c.ativo else 'secondary' }}" type="submit">
+                                {{ "Desativar" if c.ativo else "Ativar" }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not categorias %}
+                <tr>
+                    <td colspan="4" style="text-align:center; color: var(--muted);">
+                        Nenhuma categoria cadastrada.
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 
-        <button type="submit">
-            {{ "Salvar alterações" if editando else "Criar categoria" }}
-        </button>
-        <a href="/categorias">Cancelar</a>
-    </form>
-
-    <!--
-        Na edição, exibe os produtos vinculados para o admin
-        ter contexto antes de fazer alterações.
-    -->
-    {% if editando and editando.produtos %}
-        <hr>
-        <h3>Produtos vinculados a esta categoria</h3>
-        <ul>
-            {% for p in editando.produtos if p.ativo %}
-                <li>
-                    <a href="/produtos/{{ p.id }}">{{ p.nome }}</a>
-                    — R$ {{ "%.2f"|format(p.preco) }}
-                </li>
-            {% else %}
-                <li>Nenhum produto ativo vinculado.</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</body>
-</html>
+    <p class="footer-note"><a class="small-link" href="/">← Voltar ao painel</a></p>
+</div>
+{% endblock %}
