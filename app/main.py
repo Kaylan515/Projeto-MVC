@@ -9,6 +9,8 @@ from app.controllers import admin_controller
 from app.controllers import categoria_controller
 from app.controllers import produto_controller
 from app.controllers import movimentacao_controller
+from app. controllers import cliente_controller
+from app.controllers import pdv_controller
 
 app = FastAPI(title="Sistema estoque")
 
@@ -23,6 +25,8 @@ app.include_router(admin_controller.router)
 app.include_router(categoria_controller.router)
 app.include_router(produto_controller.router)
 app.include_router(movimentacao_controller.router)
+app.include_router(cliente_controller.router)
+app.include_router(pdv_controller.router)
 
 #Tela inicial
 @app.get("/")

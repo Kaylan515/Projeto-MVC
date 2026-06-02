@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Vendas — AAPM SENAI</title>
+    <style>
+        /* Configurações Globais e Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Cabeçalho */
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: #0056b3;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Botão Voltar */
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid #0056b3;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-voltar:hover {
+            background-color: #0056b3;
+            color: #ffffff;
+        }
+
+        /* Tabela Responsiva */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+
+        /* Efeito Zebrado na Tabela */
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Links da Tabela (IDs das vendas) */
+        td a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alinhamentos específicos */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        /* Badge de Desconto */
+        .badge-desconto {
+            color: #15803d;
+            background-color: #dcfce7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .SemDesconto {
+            color: #94a3b8;
+        }
+
+        /* Estado Vazio */
+        .nenhuma-venda {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-area">
+            <h1>Histórico de Vendas</h1>
+            <a href="/pdv" class="btn-voltar">← Voltar ao PDV</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th class="text-center">Itens</th>
+                        <th>Desconto</th>
+                        <th>Total</th>
+                        <th>Operador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in vendas %}
+                    <tr>
+                        <td><a href="/pdv/venda/{{ v.id }}">#{{ v.id }}</a></td>
+                        <td>{{ v.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ v.cliente.nome if v.cliente else "Balcão" }}</td>
+                        <td class="text-center">{{ v.itens | length }}</td>
+                        <td>
+                            {% if v.desconto_percentual > 0 %}
+                                <span class="badge-desconto">
+                                    {{ v.desconto_percentual|int }}%
+                                    (− R$ {{ "%.2f"|format(v.desconto_valor) }})
+                                </span>
+                            {% else %}
+                                <span class="SemDesconto">—</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>R$ {{ "%.2f"|format(v.total_liquido) }}</strong></td>
+                        <td>{{ v.usuario.nome if v.usuario else "—" }}</td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if not vendas %}
+                    <tr>
+                        <td colspan="7" class="nenhuma-venda">Nenhuma venda encontrada no histórico.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
